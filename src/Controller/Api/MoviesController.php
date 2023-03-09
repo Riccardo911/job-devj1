@@ -9,21 +9,6 @@ use Doctrine\DBAL\Connection;
 
 class MoviesController extends AbstractController
 {
-    #[Route('/api/movies')]
-    public function list(Connection $db): Response
-    {
-        $rows = $db->createQueryBuilder()
-            ->select("m.*")
-            ->from("movies", "m")
-            ->orderBy("m.release_date", "DESC")
-            ->setMaxResults(50)
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        return $this->json([
-            "movies" => $rows
-        ]);
-    }
 
     #[Route('/api/movies/genres')]
     public function genres(Connection $db): Response
@@ -39,49 +24,32 @@ class MoviesController extends AbstractController
         ]);
     }
 
-    #[Route('/api/movies/genres/{id}')]
-    public function genresById(Connection $db, $id): Response
+    #[Route('/api/movies/{genres}/{sortingCriteria}', defaults: ['genres' => '', 'sortingCriteria' => ''])]
+    public function getMovies(Connection $db, $genres, $sortingCriteria): Response
     {
-        $rows = $db->createQueryBuilder()
-                ->select("m.*")
-                ->from("movies", "m")
-                ->innerJoin("m", "movies_genres", "mg", "mg.movie_id = m.id")
+        $qb = $db->createQueryBuilder()
+            ->select("m.*")
+            ->from("movies", "m");
+
+        if (!empty($genres)) {
+            $qb->innerJoin("m", "movies_genres", "mg", "mg.movie_id = m.id")
                 ->innerJoin("mg", "genres", "g", "g.id = mg.genre_id")
                 ->where("g.id = :genreId")
-                ->orderBy("m.title")
-                ->setParameter("genreId", $id)
-            ->executeQuery()
-            ->fetchAllAssociative();
+                ->setParameter("genreId", $genres);
+        }
 
-        return $this->json([
-            "movies" => $rows
-        ]);
-    }
+        switch ($sortingCriteria) {
+            case 'mostRecents':
+                $qb->orderBy("m.release_date", "DESC");
+                break;
+            case 'rating':
+                $qb->orderBy("m.rating", "DESC");
+                break;
+            default:
+                $qb->orderBy("m.title");
+        }
 
-    #[Route('/api/movies/orderBy/mostRecents')]
-    public function mostRecents(Connection $db): Response
-    {
-        $rows = $db->createQueryBuilder()
-            ->select("m.*")
-            ->from("movies", "m")
-            ->orderBy("m.release_date", "DESC")
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        return $this->json([
-            "movies" => $rows
-        ]);
-    }
-
-    #[Route('/api/movies/orderBy/rating')]
-    public function rating(Connection $db): Response
-    {
-        $rows = $db->createQueryBuilder()
-            ->select("m.*")
-            ->from("movies", "m")
-            ->orderBy("m.rating", "DESC")
-            ->executeQuery()
-            ->fetchAllAssociative();
+        $rows = $qb->executeQuery()->fetchAllAssociative();
 
         return $this->json([
             "movies" => $rows

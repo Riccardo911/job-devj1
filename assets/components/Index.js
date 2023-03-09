@@ -7,20 +7,28 @@ const Index = props => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [route, setRoute] = useState('api/movies')
+    const [selectedGenre, setSelectedGenre] = useState('');
+
+    const handleGenreSelect = (value) => {
+        setSelectedGenre(value);
+    };
 
     //change fetch route if an option of orderBy is selected
     function handleOrderBySelect(value) {
-        if (value === 'highestRated') {
-            setRoute('api/movies/orderBy/rating');
-        } else if (value === 'mostRecents') {
-            setRoute('api/movies/orderBy/mostRecents');
+        console.log(selectedGenre)
+        if (selectedGenre) {
+            if (value === 'highestRated') {
+                setRoute(`api/movies/${selectedGenre}/rating`);
+            } else if (value === 'mostRecents') {
+                setRoute(`api/movies/${selectedGenre}/mostRecents`);
+            }
         }
     }
 
     //capture genres option selected
     function handleGenresBySelect(value) {
-        console.log(value)
-        setRoute('api/movies/genres/' + value);
+        setSelectedGenre(value);
+        setRoute('api/movies/' + value);
     }
 
     const fetchMovies = () => {
@@ -34,7 +42,6 @@ const Index = props => {
             });
     }
 
-
     useEffect(() => {
         fetchMovies();
     }, [route]);
@@ -43,8 +50,8 @@ const Index = props => {
         <Layout>
           <Heading />
             <FilterBar>
-                <GenresDropdown onSelect={handleGenresBySelect}/>
-                <OrderByDropdown onSelect={handleOrderBySelect}/>
+                <GenresDropdown onSelect={handleGenresBySelect} onOrderBySelect={handleOrderBySelect}/>
+                <OrderByDropdown onSelect={handleOrderBySelect} />
             </FilterBar>
 
           <MovieList loading={loading}>

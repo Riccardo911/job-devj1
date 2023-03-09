@@ -12,8 +12,8 @@ export default function GenresDropdown(props) {
     const handleGenresSelect = (value) => {
         props.onSelect(value);
     };
-
     const [genres, setGenres] = useState([]);
+
 
     useEffect(() => {
         // Fetch genres from API and update state

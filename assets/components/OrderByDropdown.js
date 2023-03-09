@@ -13,6 +13,13 @@ export default function OrderByDropdown(props) {
         props.onSelect(value);
     };
 
+    const [selectedOrderBy, setSelectedOrderBy] = useState('mostRecents')
+
+    const handleOrderBySelect = (value) => {
+        setSelectedOrderBy(value)
+        props.onSelect(value)
+    }
+
     return (
         <Menu as="div" className="relative inline-block text-left" >
             <div>
@@ -37,7 +44,7 @@ export default function OrderByDropdown(props) {
                         <Menu.Item >
                             {({ active }) => (
                                 <option
-                                    onClick={() => handleOptionSelect('highestRated')}
+                                    onClick={() => handleOrderBySelect('highestRated')}
                                     className={classNames(
                                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                         'block px-4 py-2 text-sm'
@@ -50,7 +57,7 @@ export default function OrderByDropdown(props) {
                         <Menu.Item >
                             {({ active }) => (
                                 <option
-                                    onClick={() => handleOptionSelect('mostRecents')}
+                                    onClick={() => handleOrderBySelect('mostRecents')}
                                     className={classNames(
                                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                         'block px-4 py-2 text-sm'
