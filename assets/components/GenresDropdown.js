@@ -7,7 +7,11 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function GenresDropdown() {
+export default function GenresDropdown(props) {
+
+    const handleGenresSelect = (value) => {
+        props.onSelect(value);
+    };
 
     const [genres, setGenres] = useState([]);
 
@@ -42,13 +46,14 @@ export default function GenresDropdown() {
                         {genres.map(genre => (
                             <Menu.Item key={genre.id}>
                                 {({ active }) => (
-                                    <a href={`/api/movies/genres/${genre.id}`}
+                                    <option
+                                        onClick={() => handleGenresSelect(genre.id)}
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                             'block px-4 py-2 text-sm'
                                         )}>
                                         {genre.id}
-                                    </a>
+                                    </option>
                                 )}
                             </Menu.Item>
                         ))}

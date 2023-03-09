@@ -8,13 +8,19 @@ const Index = props => {
     const [loading, setLoading] = useState(true);
     const [route, setRoute] = useState('api/movies')
 
+    //change fetch route if an option of orderBy is selected
     function handleOrderBySelect(value) {
-        console.log(value)
         if (value === 'highestRated') {
             setRoute('api/movies/orderBy/rating');
         } else if (value === 'mostRecents') {
             setRoute('api/movies/orderBy/mostRecents');
         }
+    }
+
+    //capture genres option selected
+    function handleGenresBySelect(value) {
+        console.log(value)
+        setRoute('api/movies/genres/' + value);
     }
 
     const fetchMovies = () => {
@@ -37,7 +43,7 @@ const Index = props => {
         <Layout>
           <Heading />
             <FilterBar>
-                <GenresDropdown/>
+                <GenresDropdown onSelect={handleGenresBySelect}/>
                 <OrderByDropdown onSelect={handleOrderBySelect}/>
             </FilterBar>
 

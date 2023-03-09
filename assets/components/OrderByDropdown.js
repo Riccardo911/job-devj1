@@ -43,7 +43,7 @@ export default function OrderByDropdown(props) {
                                         'block px-4 py-2 text-sm'
                                     )}
                                 >
-                                    From high to low ratings
+                                    Highest Rated
                                 </option>
                             )}
                         </Menu.Item>
