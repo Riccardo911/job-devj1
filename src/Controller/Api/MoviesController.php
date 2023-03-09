@@ -39,14 +39,28 @@ class MoviesController extends AbstractController
         ]);
     }
 
-    #[Route('/api/movies/orderBy/ratingAndChrono')]
+    #[Route('/api/movies/orderBy/mostRecents')]
     public function ratingAndChrono(Connection $db): Response
     {
         $rows = $db->createQueryBuilder()
-            ->select("m.title, m.release_date, m.rating")
+            ->select("m.*")
+            ->from("movies", "m")
+            ->orderBy("m.release_date", "DESC")
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return $this->json([
+            "movies" => $rows
+        ]);
+    }
+
+    #[Route('/api/movies/orderBy/rating')]
+    public function rating(Connection $db): Response
+    {
+        $rows = $db->createQueryBuilder()
+            ->select("m.*")
             ->from("movies", "m")
             ->orderBy("m.rating", "DESC")
-            ->addOrderBy("m.release_date", "DESC")
             ->executeQuery()
             ->fetchAllAssociative();
 

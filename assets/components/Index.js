@@ -6,11 +6,21 @@ import OrderByDropdown from "./OrderByDropdown";
 const Index = props => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [route, setRoute] = useState('api/movies')
+
+    function handleOrderBySelect(value) {
+        console.log(value)
+        if (value === 'highestRated') {
+            setRoute('api/movies/orderBy/rating');
+        } else if (value === 'mostRecents') {
+            setRoute('api/movies/orderBy/mostRecents');
+        }
+    }
 
     const fetchMovies = () => {
         setLoading(true);
 
-        return fetch('/api/movies')
+        return fetch(route)
             .then(response => response.json())
             .then(data => {
                 setMovies(data.movies);
@@ -18,16 +28,17 @@ const Index = props => {
             });
     }
 
+
     useEffect(() => {
         fetchMovies();
-    }, []);
+    }, [route]);
 
     return (
         <Layout>
           <Heading />
             <FilterBar>
                 <GenresDropdown/>
-                <OrderByDropdown/>
+                <OrderByDropdown onSelect={handleOrderBySelect}/>
             </FilterBar>
 
           <MovieList loading={loading}>
@@ -38,14 +49,6 @@ const Index = props => {
         </Layout>
     );
 };
-
-function orderByRatingChronoOrder() {
-    return fetch('/api/movies/orderBy/ratingAndChrono')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-        });
-}
 
 const Layout = props => {
     return (
