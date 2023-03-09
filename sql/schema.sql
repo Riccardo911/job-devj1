@@ -15,7 +15,7 @@ CREATE TABLE genres (
 
 CREATE TABLE movies (
   id varchar(190) NOT NULL,
-  rank int(4) NOT NULL,
+  `rank` int(4) NOT NULL,
   title varchar(255) NOT NULL,
   year int(4) NOT NULL,
   release_date date NULL,

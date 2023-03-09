@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Rating, Spinner } from 'flowbite-react';
+import {Button, Rating, Spinner} from 'flowbite-react';
+import GenresDropdown from "./GenresDropdown";
+import OrderByDropdown from "./OrderByDropdown";
 
 const Index = props => {
     const [movies, setMovies] = useState([]);
@@ -23,6 +25,10 @@ const Index = props => {
     return (
         <Layout>
           <Heading />
+            <FilterBar>
+                <GenresDropdown/>
+                <OrderByDropdown/>
+            </FilterBar>
 
           <MovieList loading={loading}>
             {movies.map((item, key) => (
@@ -32,6 +38,14 @@ const Index = props => {
         </Layout>
     );
 };
+
+function orderByRatingChronoOrder() {
+    return fetch('/api/movies/orderBy/ratingAndChrono')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+        });
+}
 
 const Layout = props => {
     return (
@@ -53,6 +67,14 @@ const Heading = props => {
           <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
             Explore the whole collection of movies
           </p>
+        </div>
+    );
+};
+
+const FilterBar = props => {
+    return (
+        <div className="m-10 mr-0 flex justify-end space-x-4">
+            {props.children}
         </div>
     );
 };

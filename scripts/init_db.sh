@@ -1,5 +1,4 @@
-#! /bin/bash
-
+#!/bin/bash
 path=$(realpath $(dirname $0)/..)
 mysql_params="-h mariadb -u root -pdev --default-character-set=utf8mb4"
 db_name="dev"
